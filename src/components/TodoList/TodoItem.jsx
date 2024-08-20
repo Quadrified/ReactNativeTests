@@ -1,27 +1,24 @@
 import React from 'react';
-import { Text, StyleSheet, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Animated, { SlideInRight } from 'react-native-reanimated';
 import AppColors from '../../themes/AppColors';
 
 export default function TodoItem({ item, onDelete }) {
   const onDeleteItem = () => onDelete(item.id);
 
   return (
-    <Animated.View
-      entering={SlideInRight.duration(500)}
-      style={styles.container}>
+    <View style={styles.container}>
       <Text adjustsFontSizeToFit style={styles.todoItemText}>
         {item.value}
       </Text>
-      <Pressable onPress={onDeleteItem}>
+      <Pressable role="deleteButton" onPress={onDeleteItem}>
         <MaterialCommunityIcons
           name="delete"
           size={24}
           color={AppColors.error}
         />
       </Pressable>
-    </Animated.View>
+    </View>
   );
 }
 

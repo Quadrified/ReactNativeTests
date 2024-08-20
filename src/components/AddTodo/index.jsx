@@ -9,8 +9,7 @@ export default function AddTodo({ value, onChange, onAddTodo, error }) {
     <View style={styles.container}>
       <TextInput
         mode="outlined"
-        label="Add a Todo"
-        placeholder="Ex: Pick up groceries"
+        placeholder="Add a Todo"
         value={value}
         onChangeText={onChange}
         onSubmitEditing={onAddTodo}
@@ -22,7 +21,8 @@ export default function AddTodo({ value, onChange, onAddTodo, error }) {
         mode="contained"
         onPress={onAddTodo}
         style={styles.addButton}
-        labelStyle={styles.buttonLabel}>
+        labelStyle={styles.buttonLabel}
+        testID="AddTodoButton">
         Add Todo
       </Button>
     </View>
@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
   addButton: {
     borderRadius: 8,
     backgroundColor: AppColors.primary,
+    marginTop: 12,
   },
   buttonLabel: {
     fontSize: 18,

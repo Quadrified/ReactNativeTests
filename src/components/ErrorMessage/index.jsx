@@ -1,18 +1,14 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function ErrorMessage({ children, visible }) {
+  if (!visible) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
-      {visible && (
-        <Animated.Text
-          entering={FadeIn.duration(500)}
-          exiting={FadeOut.duration(500)}
-          style={styles.text}>
-          {children}
-        </Animated.Text>
-      )}
+      <Text style={styles.text}>{children}</Text>
     </View>
   );
 }
@@ -20,7 +16,7 @@ export default function ErrorMessage({ children, visible }) {
 const styles = StyleSheet.create({
   container: {
     alignSelf: 'flex-start',
-    margin: 10,
+    margin: 5,
   },
   text: {
     color: 'red',
