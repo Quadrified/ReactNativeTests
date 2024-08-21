@@ -1,11 +1,55 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+  FlatList,
+} from 'react-native';
 import AppColors from '../../themes/AppColors';
+import { get } from '../../api/api';
+import { ALL_RECIPES } from '../../api/endpoints';
+import RecipeCard from '../../components/RecipeCard';
 
-const DashboardScreen = props => {
+const DashboardScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    fetchRecipes();
+  }, [fetchRecipes]);
+
+  const fetchRecipes = useCallback(async () => {
+    setLoading(true);
+    const response = await get(ALL_RECIPES);
+    if (response?.recipes?.length > 0) {
+      setRecipes(response?.recipes);
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const renderRecipeCard = ({ item }) => <RecipeCard recipe={item} />;
+
   return (
     <View style={styles.container}>
-      <Text>DashboardScreen</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Your Awesome Recipes</Text>
+      </View>
+      {loading ? (
+        <ActivityIndicator
+          color={AppColors.primary}
+          size={70}
+          style={styles.loader}
+        />
+      ) : (
+        <FlatList
+          data={recipes}
+          keyExtractor={recipe => recipe?.id?.toString()}
+          renderItem={renderRecipeCard}
+        />
+      )}
     </View>
   );
 };
@@ -13,9 +57,19 @@ const DashboardScreen = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: AppColors.background,
+  },
+  header: {
+    padding: 15,
+    backgroundColor: AppColors.primary,
+  },
+  headerText: {
+    color: AppColors.white,
+    fontSize: 24,
+  },
+  loader: {
+    flex: 1,
+    alignSelf: 'center',
   },
 });
 

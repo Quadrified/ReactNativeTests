@@ -26,6 +26,7 @@ jest.useFakeTimers();
  * 3. Basic example
  */
 // Can also be it() or test()
+// Describe anatomy of a test
 describe('Math Utilities', () => {
   it('should add two numbers correctly', () => {
     const test = 2 + 2;
@@ -41,125 +42,126 @@ describe('Math Utilities', () => {
 /**
  * Actual tests
  */
+describe('TodoScreen', () => {
+  // Create Todo item
+  it('should create a Todo item', () => {
+    /**
+     * 4. 1st Test case Basic example
+     */
 
-// Create Todo item
-it('should create a Todo item', () => {
-  /**
-   * 4. 1st Test case Basic example
-   */
+    const { getByText, getByPlaceholderText } = render(<TodoScreen />);
 
-  const { getByText, getByPlaceholderText } = render(<TodoScreen />);
+    const addTodoItemButton = getByText('Add Todo');
+    const todoInput = getByPlaceholderText('Add a Todo');
 
-  const addTodoItemButton = getByText('Add Todo');
-  const todoInput = getByPlaceholderText('Add a Todo');
+    const newTodoItem = 'Pick up groceries';
 
-  const newTodoItem = 'Pick up groceries';
+    fireEvent.changeText(todoInput, newTodoItem);
+    fireEvent.press(addTodoItemButton);
 
-  fireEvent.changeText(todoInput, newTodoItem);
-  fireEvent.press(addTodoItemButton);
+    const createdTodoItem = getByText(newTodoItem);
 
-  const createdTodoItem = getByText(newTodoItem);
+    expect(createdTodoItem).not.toBeNull();
+  });
 
-  expect(createdTodoItem).not.toBeNull();
-});
+  // Create Multiple Todo Items
+  it('should create multiple Todo items', () => {
+    const { getByText, getByPlaceholderText } = render(<TodoScreen />);
 
-// Create Multiple Todo Items
-it('should create multiple Todo items', () => {
-  const { getByText, getByPlaceholderText } = render(<TodoScreen />);
+    const addTodoItemButton = getByText('Add Todo');
+    const todoInput = getByPlaceholderText('Add a Todo');
 
-  const addTodoItemButton = getByText('Add Todo');
-  const todoInput = getByPlaceholderText('Add a Todo');
+    const firstTodoItem = 'Pick up groceries';
+    const secondTodoItem = 'Create React Native Testing Guide';
 
-  const firstTodoItem = 'Pick up groceries';
-  const secondTodoItem = 'Create React Native Testing Guide';
+    fireEvent.changeText(todoInput, firstTodoItem);
+    fireEvent.press(addTodoItemButton);
 
-  fireEvent.changeText(todoInput, firstTodoItem);
-  fireEvent.press(addTodoItemButton);
+    fireEvent.changeText(todoInput, secondTodoItem);
+    fireEvent.press(addTodoItemButton);
 
-  fireEvent.changeText(todoInput, secondTodoItem);
-  fireEvent.press(addTodoItemButton);
+    const firstCreatedTodoItem = getByText(firstTodoItem);
+    const secondCreatedTodoItem = getByText(secondTodoItem);
 
-  const firstCreatedTodoItem = getByText(firstTodoItem);
-  const secondCreatedTodoItem = getByText(secondTodoItem);
+    expect(firstCreatedTodoItem).not.toBeNull();
+    expect(secondCreatedTodoItem).not.toBeNull();
+  });
 
-  expect(firstCreatedTodoItem).not.toBeNull();
-  expect(secondCreatedTodoItem).not.toBeNull();
-});
+  // Delete Todo Item
+  it('should delete a Todo item', () => {
+    const { getByText, getByPlaceholderText, getByRole, queryByText } = render(
+      <TodoScreen />,
+    );
 
-// Delete Todo Item
-it('should delete a Todo item', () => {
-  const { getByText, getByPlaceholderText, getByRole, queryByText } = render(
-    <TodoScreen />,
-  );
+    const addTodoItemButton = getByText('Add Todo');
+    const todoInput = getByPlaceholderText('Add a Todo');
 
-  const addTodoItemButton = getByText('Add Todo');
-  const todoInput = getByPlaceholderText('Add a Todo');
+    const newTodoItem = 'Pick up groceries';
 
-  const newTodoItem = 'Pick up groceries';
+    fireEvent.changeText(todoInput, newTodoItem);
+    fireEvent.press(addTodoItemButton);
 
-  fireEvent.changeText(todoInput, newTodoItem);
-  fireEvent.press(addTodoItemButton);
+    const createdTodoItem = getByText(newTodoItem);
 
-  const createdTodoItem = getByText(newTodoItem);
+    expect(createdTodoItem).not.toBeNull();
 
-  expect(createdTodoItem).not.toBeNull();
+    const deleteTodoButton = getByRole('deleteButton');
+    fireEvent.press(deleteTodoButton);
 
-  const deleteTodoButton = getByRole('deleteButton');
-  fireEvent.press(deleteTodoButton);
+    // getBy vs queryBy => getBy... query methods fail (throws error) when there is no matching element (null) but queryBy... methods don’t throw an error when no element (null) is found. We don’t want to get error from the line of fetching element. We want to get the error from the last line of TEST suit that is “expect”. So use queryBy... method instead of getBy....
 
-  // getBy vs queryBy => getBy... query methods fail (throws error) when there is no matching element (null) but queryBy... methods don’t throw an error when no element (null) is found. We don’t want to get error from the line of fetching element. We want to get the error from the last line of TEST suit that is “expect”. So use queryBy... method instead of getBy....
+    // if we use getBy it will error out the test before assertion (expect) because item does not exist in the todo list
+    // queryBy does not fail test before assertion (expect)
+    const deletedItem = queryByText(newTodoItem);
 
-  // if we use getBy it will error out the test before assertion (expect) because item does not exist in the todo list
-  // queryBy does not fail test before assertion (expect)
-  const deletedItem = queryByText(newTodoItem);
+    expect(deletedItem).toBeNull();
+  });
 
-  expect(deletedItem).toBeNull();
-});
+  // Show error message on empty input
+  it('should show error message on empty input', () => {
+    const { getByText } = render(<TodoScreen />);
 
-// Show error message on empty input
-it('should show error message on empty input', () => {
-  const { getByText } = render(<TodoScreen />);
+    const addTodoItemButton = getByText('Add Todo');
 
-  const addTodoItemButton = getByText('Add Todo');
+    fireEvent.press(addTodoItemButton);
 
-  fireEvent.press(addTodoItemButton);
+    const errorMessage = getByText('Please enter a valid todo');
 
-  const errorMessage = getByText('Please enter a valid todo');
+    expect(errorMessage).not.toBeNull();
+  });
 
-  expect(errorMessage).not.toBeNull();
-});
+  // Error message should disappear once a valid item is created
+  it('should show remove error message on adding valid input', () => {
+    const { getByText, getByPlaceholderText, queryByDisplayValue } = render(
+      <TodoScreen />,
+    );
 
-// Error message should disappear once a valid item is created
-it('should show remove error message on adding valid input', () => {
-  const { getByText, getByPlaceholderText, queryByDisplayValue } = render(
-    <TodoScreen />,
-  );
+    const addTodoItemButton = getByText('Add Todo');
 
-  const addTodoItemButton = getByText('Add Todo');
+    fireEvent.press(addTodoItemButton);
 
-  fireEvent.press(addTodoItemButton);
+    const todoInput = getByPlaceholderText('Add a Todo');
 
-  const todoInput = getByPlaceholderText('Add a Todo');
+    const newTodoItem = 'Pick up groceries';
 
-  const newTodoItem = 'Pick up groceries';
+    fireEvent.changeText(todoInput, newTodoItem);
+    fireEvent.press(addTodoItemButton);
 
-  fireEvent.changeText(todoInput, newTodoItem);
-  fireEvent.press(addTodoItemButton);
+    const errorMessage = queryByDisplayValue('Please enter a valid todo');
 
-  const errorMessage = queryByDisplayValue('Please enter a valid todo');
+    expect(errorMessage).toBeNull();
+  });
 
-  expect(errorMessage).toBeNull();
-});
+  // Navigation from Todo to Recipes screen
 
-// Navigation from Todo to Recipes screen
+  it('should navigate to Login screen on pressing food icon', () => {
+    const navigation = { navigate: jest.fn() };
 
-it('should navigate to Login screen on pressing food icon', () => {
-  const navigation = { navigate: jest.fn() };
+    const { getByRole } = render(<TodoScreen navigation={navigation} />);
 
-  const { getByRole } = render(<TodoScreen navigation={navigation} />);
+    const recipesLoginButton = getByRole('RecipesLoginButton');
+    fireEvent.press(recipesLoginButton);
 
-  const recipesLoginButton = getByRole('RecipesLoginButton');
-  fireEvent.press(recipesLoginButton);
-
-  expect(navigation.navigate).toHaveBeenCalledWith('Login');
+    expect(navigation.navigate).toHaveBeenCalledWith('Login');
+  });
 });

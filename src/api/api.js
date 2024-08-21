@@ -11,20 +11,9 @@ export const post = async (url, postBody = null) => {
   }
 };
 
-export const get = async (
-  url,
-  queryParams = null,
-  headers = undefined,
-  timeout = '0s',
-) => {
+export const get = async url => {
   try {
-    const response = await axios.get(url, {
-      headers,
-      timeout, // default is 0s
-      params: {
-        ...queryParams,
-      },
-    });
+    const response = await axios.get(url);
 
     return response.data;
   } catch (err) {
