@@ -27,8 +27,16 @@ jest.useFakeTimers();
  */
 // Can also be it() or test()
 // Describe anatomy of a test
+//  •	Import Statements: Import necessary modules, components, and utilities.
+// 	•	Setup: This might include mock setup, initializing test data, or configuring certain global settings.
+// 	•	Test Suites (describe blocks): Group related tests together.
+// 	•	Individual Tests (it or test blocks): Define each test case.
+// 	•	Assertions: Validate the behavior of your component or function.
+
 describe('Math Utilities', () => {
+  // describe => test suite
   it('should add two numbers correctly', () => {
+    // test case
     const test = 2 + 2;
     expect(test).toEqual(4); // assertion
   });
@@ -62,6 +70,7 @@ describe('TodoScreen', () => {
     const createdTodoItem = getByText(newTodoItem);
 
     expect(createdTodoItem).not.toBeNull();
+    // OR expect(createdTodoItem).toBeTruthy();
   });
 
   // Create Multiple Todo Items
@@ -115,6 +124,7 @@ describe('TodoScreen', () => {
     const deletedItem = queryByText(newTodoItem);
 
     expect(deletedItem).toBeNull();
+    // OR expect(deletedItem).toBeFalsy();
   });
 
   // Show error message on empty input
