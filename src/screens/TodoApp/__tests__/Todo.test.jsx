@@ -174,4 +174,10 @@ describe('TodoScreen', () => {
 
     expect(navigation.navigate).toHaveBeenCalledWith('Login');
   });
+
+  // Snapshot test
+  it('renders correctly according to the snapshot', () => {
+    const { toJSON } = render(<TodoScreen />);
+    expect(toJSON()).toMatchSnapshot();
+  });
 });
