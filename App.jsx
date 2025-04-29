@@ -5,6 +5,8 @@ import AppNavigator from './src/navigation/AppNavigator';
 import AppTheme from './src/themes/AppTheme';
 import AppColors from './src/themes/AppColors';
 
+// Adding this comment for GitButler
+
 const App = () => {
   return (
     <PaperProvider theme={AppTheme}>
